@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <h3>Schießkladde</h3>
+          <h3>Schießkladde am {{date.getDate()}}.{{date.getMonth()+1}}.{{date.getFullYear()}}</h3>
         </v-col>
       </v-row>
 
@@ -34,12 +34,13 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "home",
   components: {},
   data: () => {
     return {
-      date: 0,
+      date: new Date(),
       shooter: {
         name: "",
         surname: "",
@@ -51,8 +52,21 @@ export default {
   },
   methods: {
     saveShooter() {
-      // eslint-disable-next-line no-console
-      console.log(this.shooter);
+      axios
+        .post("http://localhost:3000/neweintrag", {
+          shooter: this.shooter
+        })
+        .then(response => {
+          // eslint-disable-next-line no-console
+          console.log(response);
+          this.shooter = {
+            name: "",
+            surname: "",
+            gk: false,
+            kk: false,
+            pauschale: false
+          };
+        });
     }
   }
 };

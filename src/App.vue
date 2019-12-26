@@ -33,7 +33,7 @@
       <v-toolbar-title>Schießkladde</v-toolbar-title>
     </v-app-bar>
 
-    <v-content>
+    <v-content background-color="light-blue">
       <v-container>
         <router-view></router-view>
       </v-container>
@@ -49,6 +49,9 @@
 export default {
   data: () => ({
     drawer: null
-  })
+  }),
+  created() {
+    this.$vuetify.theme.dark = true;
+  }
 };
 </script>

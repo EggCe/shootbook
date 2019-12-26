@@ -1,5 +1,6 @@
 import express from "express";
 import mysql from "mysql";
+import cors from "cors";
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -12,24 +13,50 @@ var connection = mysql.createConnection({
 
 export default (app, http) => {
   app.use(express.json());
+  app.use(cors());
+
 
   app.get("/eintraege", (req, res) => {
-    let result = {};
-    connection.connect();
-
-    connection.query("SELECT * FROM eintraege", function(err, rows, fields) {
-      if (err) throw err;
-      console.log("The solution is: ", rows);
-      result = rows[0];
+    connection.query("SELECT * FROM eintraege", function (err, rows, fields) {
       res.json({ ergebnis: rows });
     });
-
-    connection.end();
   });
 
-  // app.post('/bar', (req, res) => {
-  //   res.json(req.body);
-  // });
+  app.post("/neweintrag", (req, res) => {
+    // let params = req.body;
+    let name = req.body.shooter.name;
+    let surname = req.body.shooter.surname;
+    let gk = 0;
+    let kk = 0;
+    let pauschale = 0;
+    if (req.body.shooter.gk === true) { gk = 1; }
+    else {
+      gk = 0;
+    }
+    if (req.body.shooter.kk === true) {
+      kk = 1;
+    }
+    else {
+      kk = 0;
+    }
+    if (req.body.shooter.pauschale === true) {
+      pauschale = 1;
+    }
+    else {
+      pauschale = 0;
+    }
+
+
+    connection.query("INSERT INTO eintraege (name, last_name, pauschale, gk ,kk, date) VALUES ('" + name + "', '" + surname + "', '" + pauschale + "', '" + gk + "', '" + kk + "', now())", function (err, rows, fields) {
+
+    });
+
+  });
+
+
+  app.post('/bar', (req, res) => {
+
+  });
   //
   // optional support for socket.io
   //
@@ -40,4 +67,4 @@ export default (app, http) => {
   //   });
   //   client.emit("message", "Welcome");
   // });
-};
+}
